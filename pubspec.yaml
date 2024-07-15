@@ -1,4 +1,4 @@
-name: flutter_app
+name: flutter_tested
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -31,10 +31,15 @@ dependencies:
   flutter:
     sdk: flutter
 
+flutter_lorem:
+  cupertino_icons: ^1.0.6
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.6
+cupertino_icons: ^1.0.6
+intl: ^0.19.0
+flutter_application_1: ^0.0.2
 
 dev_dependencies:
   flutter_test:
@@ -59,8 +64,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - images/pexels-willpicturethis-1954524.jpg
+    - images/pexels-anush-1229356.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
