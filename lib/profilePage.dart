@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'trackerPage.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
- return Scaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -130,19 +131,29 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
+      ),  bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.blue),
-            label: '',
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.blue),
-            label: '',
+            icon: Icon(Icons.show_chart),
+            label: 'Trackers',
           ),
         ],
+        currentIndex: 0,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.white,
+        backgroundColor: Colors.black,
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => TrackerPageContent()),
+            );
+          }
+        },
       ),
     );
   }
@@ -214,6 +225,4 @@ class UpdateWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
+  }}

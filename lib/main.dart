@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'profilePage.dart'; 
-import 'trackerPage.dart';
-import 'login.dart'; 
-import 'settingsPage.dart';
+import 'package:flutter_tested/login.dart';
+import 'profilePage.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(WellTrackApp());
 }
 
-class MyApp extends StatelessWidget {
+class WellTrackApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
-      //home: ProfilePage(),
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: Colors.black,
+        primaryColor: Colors.blue,
+      ),
       home: LoginPage(),
-      //home: TrackerPage(),
-      debugShowCheckedModeBanner: false, 
     );
-  }
-}
+  }}

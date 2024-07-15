@@ -1,22 +1,6 @@
 import 'package:flutter/material.dart';
-import 'settingsPage.dart';
-
-void main() {
-  runApp(TrackerPage());
-}
-
-class TrackerPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black,
-        primaryColor: Colors.blue,
-      ),
-      home: TrackerPageContent(),
-    );
-  }
-}
+import 'package:flutter_tested/settingsPage.dart';
+import 'profilePage.dart';
 
 class TrackerPageContent extends StatelessWidget {
   @override
@@ -77,23 +61,25 @@ class TrackerPageContent extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.show_chart),
             label: 'Trackers',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
+          ),        ],
         currentIndex: 1,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.white,
         backgroundColor: Colors.black,
-        onTap: (index) {},
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          }
+        },
       ),
     );
   }
@@ -112,12 +98,12 @@ class HealthMetricCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         title: Text(title, style: TextStyle(color: Colors.white)),
-        subtitle: Text(value, style: TextStyle(color: Colors.white70)),
-        trailing: TextButton(
-          onPressed: () {},
-          child: Text('View History', style: TextStyle(color: Colors.blue)),
-        ),
+        subtitle: Text(value, style: TextStyle(color: Colors.grey)),
       ),
     );
   }
 }
+
+
+  
+

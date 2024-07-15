@@ -94,9 +94,9 @@ class SettingsSwitch extends StatelessWidget {
         title,
         style: TextStyle(color: Colors.white), 
       ),
-      value: true, // Replace with actual switch state management logic
+      value: true, 
       onChanged: (bool value) {
-        // Implement logic to change switch state
+       
       },
       activeColor: Colors.blue, 
       inactiveThumbColor: Colors.grey, 
@@ -155,7 +155,6 @@ class SettingsButton extends StatelessWidget {
       ),
       trailing: ElevatedButton(
         onPressed: () {
-          // Implement button press logic
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: buttonColor,
