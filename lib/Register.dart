@@ -1,35 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tested/Register.dart';
+import 'package:flutter_tested/Login.dart';
 import 'profilePage.dart';
 import 'api_service.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
 
-  void _login() async {
+  void _register() async {
     final email = _emailController.text;
     final password = _passwordController.text;
+    final name = _nameController.text;
+    final fullName = _fullNameController.text;
 
     try {
-      final response = await ApiService.loginUser(email, password);
+      final response = await ApiService.registerUser(email, password, name, fullName);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => LoginPage()),
         );
       } else {
         // Handle error
-        print("Failed to login: ${response.body}");
+        print("Failed to register: ${response.body}");
       }
     } catch (e) {
-      print("Exception during login: $e");
+      print("Exception during registration: $e");
     }
   }
 
@@ -61,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 40),
                 Text(
-                  'Login to Your Account',
+                  'Create Account',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -84,20 +88,26 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(),
                   ),
                 ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: _fullNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Full Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
                 SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: _login,
-                  child: Text('Login'),
-                ),
-                SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()),
-                    );
-                  },
-                  child: Text('Don\'t have an account? Sign up'),
+                  onPressed: _register,
+                  child: Text('Join'),
                 ),
               ],
             ),

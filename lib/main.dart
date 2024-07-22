@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tested/Register.dart';
 import 'package:flutter_tested/login.dart';
 import 'profilePage.dart';
 
