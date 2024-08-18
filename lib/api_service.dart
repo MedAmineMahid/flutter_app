@@ -87,7 +87,7 @@ class ApiService {
   }
 
   static Future<http.Response> addActivity(Map<String, dynamic> activityData) async {
-    final url = Uri.parse('$_baseUrl/activities/add');
+    final url = Uri.parse('$_baseUrl/activities');
     final response = await http.post(
       url,
       headers: await _getHeaders(),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:io';
-import 'dart:convert'; // Import this to use jsonDecode
+import 'dart:convert';
+import 'api_service.dart';
 
-import 'package:flutter_tested/api_service.dart';
 class ActivitiesPage extends StatefulWidget {
   @override
   _ActivitiesPageState createState() => _ActivitiesPageState();
@@ -20,19 +18,26 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
   void _fetchActivities() async {
     final response = await ApiService.fetchUserActivities('user_id');
-    setState(() {
-      activities = jsonDecode(response.body);
-    });
+    if (response.statusCode == 200) {
+      setState(() {
+        activities = jsonDecode(response.body);
+      });
+    } else {
+      print('Failed to load activities: ${response.body}');
+    }
   }
 
   void _addActivity() async {
-    // Logic to show a form to add a new activity
     Map<String, dynamic> newActivity = {
       'name': 'Running',
       'duration': 30, // Example data
     };
-    await ApiService.addActivity(newActivity);
-    _fetchActivities(); // Refresh the activities list
+    final response = await ApiService.addActivity(newActivity);
+    if (response.statusCode == 201) {
+      _fetchActivities(); // Refresh the activities list
+    } else {
+      print('Failed to add activity: ${response.body}');
+    }
   }
 
   @override
