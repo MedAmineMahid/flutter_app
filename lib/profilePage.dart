@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api_service.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';  // For formatting date
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -10,6 +11,18 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? userData;
   String? userId;
+  String? selectedActivity;
+  DateTime? selectedDate;
+  final List<String> activities = [
+    'Running',
+    'Walking',
+    'Jogging',
+    'Gym',
+    'Yoga',
+    'HIIT',
+    'CrossFit',
+    'Cycling'
+  ];
 
   @override
   void initState() {
@@ -20,8 +33,8 @@ class _ProfilePageState extends State<ProfilePage> {
   void _fetchSignedInUserId() async {
     userId = await ApiService.fetchSignedInUserId();
     if (userId != null) {
-      _fetchUserData(); 
-      print('got the signed-in user ID');
+      _fetchUserData();
+      print('Got the signed-in user ID');
     } else {
       print('Failed to get the signed-in user ID');
     }
@@ -42,71 +55,123 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _createActivity(String title, String description) async {
+  void _createActivity(String title, String description, String duration, DateTime? date) async {
     if (userId == null) {
       print('User ID is null, cannot create activity');
       return;
     }
 
-    final response = await ApiService.addActivity({
+    final activityData = {
       'title': title,
       'description': description,
-      'userId': userId, // Use the actual user ID
-    });
+      'duration': duration,
+      'date': date != null ? DateFormat('yyyy-MM-dd').format(date) : null,
+      'userId': userId,
+    };
+
+    print('Activity Data: $activityData'); // Debug print
+
+    final response = await ApiService.addActivity(activityData);
 
     if (response.statusCode == 201) {
       print('Activity created successfully');
       _fetchUserData();
     } else {
-      print('Failed to create activity');
+      print('Failed to create activity: ${response.body}');
     }
   }
 
   void _showCreateActivityDialog() {
-    String title = '';
-    String description = '';
+  final descriptionController = TextEditingController();
+  final durationController = TextEditingController();
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Create New Activity'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Title'),
-                onChanged: (value) {
-                  title = value;
-                },
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Create New Activity'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (selectedActivity != null) // Check if an activity is selected
+              Text(
+                'Title: $selectedActivity',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Description'),
-                onChanged: (value) {
-                  description = value;
-                },
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(labelText: 'Description'),
             ),
-            TextButton(
-              onPressed: () {
-                _createActivity(title, description);
-                Navigator.of(context).pop();
+            TextField(
+              controller: durationController,
+              decoration: InputDecoration(labelText: 'Duration'),
+              keyboardType: TextInputType.number,
+            ),
+            DropdownButton<String>(
+              value: selectedActivity,
+              hint: Text('Select Activity'),
+              items: activities.map((activity) {
+                return DropdownMenuItem<String>(
+                  value: activity,
+                  child: Text(activity),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedActivity = value;
+                });
               },
-              child: Text('Create'),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate ?? DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
+                );
+                if (picked != null && picked != selectedDate)
+                  setState(() {
+                    selectedDate = picked;
+                  });
+              },
+              child: Text(
+                selectedDate == null
+                    ? 'Select Date'
+                    : DateFormat('yyyy-MM-dd').format(selectedDate!),
+              ),
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (selectedActivity != null) {
+                _createActivity(
+                  selectedActivity!,
+                  descriptionController.text,
+                  durationController.text,
+                  selectedDate,
+                );
+                Navigator.of(context).pop();
+              } else {
+                print('No activity selected');
+              }
+            },
+            child: Text('Create'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
