@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tested/Login.dart';
-import 'profilePage.dart';
 import 'api_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -13,15 +12,35 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+
+  String _selectedGender = 'male'; // Default gender
+  String _selectedGoal = 'lose weight'; // Default goal
 
   void _register() async {
     final email = _emailController.text;
     final password = _passwordController.text;
     final name = _nameController.text;
-    final fullName = _fullNameController.text;
+    final age = int.tryParse(_ageController.text); 
+    final gender = _selectedGender;
+    final goal = _selectedGoal;
+
+    if (age == null) {
+      // Handle invalid age input
+      print("Invalid age entered.");
+      return;
+    }
 
     try {
-      final response = await ApiService.registerUser(email, password, name, fullName);
+      // Now passing all 7 required parameters
+      final response = await ApiService.registerUser(
+        email,
+        password,
+        name,
+        age,
+        gender,
+        goal,
+      );
 
       if (response.statusCode == 201) {
         Navigator.push(
@@ -29,7 +48,6 @@ class _RegisterPageState extends State<RegisterPage> {
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
       } else {
-        // Handle error
         print("Failed to register: ${response.body}");
       }
     } catch (e) {
@@ -99,10 +117,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(height: 20),
                   TextField(
                     controller: _emailController,
-                    style: TextStyle(color: Colors.black), // Text color for input
+                    style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: TextStyle(color: Colors.black), // Text color for label
+                      labelStyle: TextStyle(color: Colors.black),
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -110,32 +128,73 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextField(
                     controller: _passwordController,
                     obscureText: true,
-                    style: TextStyle(color: Colors.black), // Text color for input
+                    style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: TextStyle(color: Colors.black), // Text color for label
+                      labelStyle: TextStyle(color: Colors.black),
                       border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 20),
                   TextField(
                     controller: _nameController,
-                    style: TextStyle(color: Colors.black), // Text color for input
+                    style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      labelStyle: TextStyle(color: Colors.black), // Text color for label
+                      labelStyle: TextStyle(color: Colors.black),
                       border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 20),
                   TextField(
-                    controller: _fullNameController,
-                    style: TextStyle(color: Colors.black), // Text color for input
+                    controller: _ageController,
+                    keyboardType: TextInputType.number, 
+                    style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
-                      labelText: 'Full Name',
-                      labelStyle: TextStyle(color: Colors.black), // Text color for label
+                      labelText: 'Age',
+                      labelStyle: TextStyle(color: Colors.black),
                       border: OutlineInputBorder(),
                     ),
+                  ),
+                  SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
+                    value: _selectedGender,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedGender = newValue!;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Gender',
+                      border: OutlineInputBorder(),
+                    ),
+                    style: TextStyle(color: Colors.black), // Set dropdown text color to black
+                    items: ['male', 'female'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: TextStyle(color: Colors.black)), // Set items text color to black
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 20),
+                  DropdownButtonFormField<String>(
+                    value: _selectedGoal,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedGoal = newValue!;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Goal',
+                      border: OutlineInputBorder(),
+                    ),
+                    style: TextStyle(color: Colors.black), // Set dropdown text color to black
+                    items: ['lose weight', 'gain weight'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: TextStyle(color: Colors.black)), // Set items text color to black
+                      );
+                    }).toList(),
                   ),
                   SizedBox(height: 30),
                   SizedBox(
@@ -144,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       onPressed: _register,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 15),
-                        backgroundColor: Colors.blue, // Background color for the button
+                        backgroundColor: Colors.blue,
                       ),
                       child: Text(
                         'Join',
@@ -161,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       );
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.black, // Text color for the button
+                      foregroundColor: Colors.black,
                     ),
                     child: Text('Already have an account? Login'),
                   ),

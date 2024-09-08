@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tested/Register.dart';
-import 'profilePage.dart';
+import 'package:flutter_tested/main.dart';
+import 'package:flutter_tested/register.dart';
 import 'api_service.dart';
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -20,12 +19,15 @@ class _LoginPageState extends State<LoginPage> {
       final response = await ApiService.loginUser(email, password);
 
       if (response.statusCode == 200) {
-        Navigator.push(
+        
+        // If login is successful, set the login status to true
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(
+            builder: (context) => WellTrackApp(isLoggedIn: true), // Pass the login state
+          ),
         );
       } else {
-        // Handle error
         print("Failed to login: ${response.body}");
       }
     } catch (e) {
@@ -95,10 +97,10 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 20),
                   TextField(
                     controller: _emailController,
-                    style: TextStyle(color: Colors.black), // Text color for input
+                    style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: TextStyle(color: Colors.black), // Text color for label
+                      labelStyle: TextStyle(color: Colors.black),
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -106,10 +108,10 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                     controller: _passwordController,
                     obscureText: true,
-                    style: TextStyle(color: Colors.black), // Text color for input
+                    style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: TextStyle(color: Colors.black), // Text color for label
+                      labelStyle: TextStyle(color: Colors.black),
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -120,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 15),
-                        backgroundColor: Colors.blue, // Background color for the button
+                        backgroundColor: Colors.blue,
                       ),
                       child: Text(
                         'Login',
@@ -131,13 +133,13 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 10),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => RegisterPage()),
                       );
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.black, // Text color for the button
+                      foregroundColor: Colors.black,
                     ),
                     child: Text('Don\'t have an account? Sign up'),
                   ),

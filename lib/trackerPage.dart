@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tested/settingsPage.dart';
+import 'settingsPage.dart';
 import 'profilePage.dart';
 
 class TrackerPageContent extends StatelessWidget {
@@ -58,29 +58,7 @@ class TrackerPageContent extends StatelessWidget {
         onPressed: () {},
         child: Icon(Icons.add),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.show_chart),
-            label: 'Trackers',
-          ),        ],
-        currentIndex: 1,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.white,
-        backgroundColor: Colors.black,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-          }
-        },
-      ),
+      // Remove the BottomNavigationBar here
     );
   }
 }
@@ -103,7 +81,3 @@ class HealthMetricCard extends StatelessWidget {
     );
   }
 }
-
-
-  
-

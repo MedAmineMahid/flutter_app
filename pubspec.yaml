@@ -31,6 +31,7 @@ dependencies:
   file_picker: ^8.0.0+1
   flutter:
     sdk: flutter
+  font_awesome_flutter: ^10.0.0  # Use the latest version
   intl: ^0.18.0 # Use the latest version available
 
   flutter_secure_storage: ^5.0.2
