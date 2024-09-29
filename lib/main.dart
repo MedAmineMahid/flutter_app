@@ -27,8 +27,7 @@ class _WellTrackAppState extends State<WellTrackApp> {
 
   final List<Widget> _pages = [
     ProfilePage(),
-    TrackerPageContent(),
-    SettingsPage(),
+    TrackerPage(),
     NutritionPage(),
     ExercisePage(), // Add the Exercise page
   ];
@@ -65,10 +64,7 @@ class _WellTrackAppState extends State<WellTrackApp> {
                     icon: Icon(Icons.show_chart),
                     label: 'Tracking',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.settings),
-                    label: 'Settings',
-                  ),
+                
                   BottomNavigationBarItem(
                     icon: Icon(Icons.restaurant),
                     label: 'Nutrition',

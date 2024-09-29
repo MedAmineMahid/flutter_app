@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_tested/Meals.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:io';
@@ -8,6 +9,9 @@ class ApiService {
  static const String _appId = '53e2331c'; // Replace with your Nutritionix App ID
   static const String _appKey = 'c822a47e0b6e4400e87780857b11ab3c';
   static const String _baseUrl = 'http://localhost:8080/api';
+  static const String baseUrl = 'https://exercisedb.p.rapidapi.com';
+  static const String apiKey = '81d7c1dc3dmshbe58b6cfae46e7bp1e184ajsn01a9767a444e';
+
   static const storage = FlutterSecureStorage();
 
   // Login user and store the token
@@ -146,6 +150,37 @@ static Future<http.Response> registerUser(String email, String password, String 
       rethrow;
     }
   }
+static Future<List<Meal>> fetchUserMeals(String userId) async {
+  final url = Uri.parse('$_baseUrl/meals/user/$userId/meals');
+  try {
+    final response = await http.get(url, headers: await getHeaders());
+    if (response.statusCode == 200) {
+      final responseBody = jsonDecode(response.body);
+
+      // Check if the response body is a list
+      if (responseBody is List) {
+        // Print response to debug
+        print('Response body: $responseBody');
+
+        return responseBody.map((json) => Meal(
+          mealName: json['mealName'],
+          ingredients: List<String>.from(json['ingredients']),
+          totalCalories: json['totalCalories'],
+          time: json.containsKey('time') ? DateTime.parse(json['time']) : null,
+        )).toList();
+      } else {
+        throw Exception('Invalid response format: Expected a list');
+      }
+    } else {
+      throw Exception('Failed to load meals');
+    }
+  } catch (e) {
+    print('Error fetching user meals: $e');
+    rethrow;
+  }
+}
+
+
 
   // Get food calories (natural search)
   static Future<http.Response> getFoodCalories(String foodName) async {
@@ -199,6 +234,43 @@ static Future<http.Response> registerUser(String email, String password, String 
       rethrow;
     }
   }
+  // Fetch list of exercises by category
+
+  static Future<List<dynamic>> fetchExercisesByBodyPart(String bodyPart) async {
+    final url = Uri.parse('$baseUrl/exercises/bodyPart/$bodyPart');
+    final response = await http.get(
+      url,
+      headers: {
+        'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
+        'X-RapidAPI-Key': apiKey,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> exercises = jsonDecode(response.body);
+      return exercises;
+    } else {
+      throw Exception('Failed to load exercises');
+    }
+  }
+
+// Fetch exercise details by ID
+static Future<http.Response> fetchExerciseDetails(String exerciseId) async {
+  final url = Uri.parse('https://exercisedb.p.rapidapi.com/exercises/exercise/$exerciseId');
+  try {
+    final response = await http.get(
+      url,
+      headers: {
+        'x-rapidapi-key': '81d7c1dc3dmshbe58b6cfae46e7bp1e184ajsn01a9767a444e', 
+        'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
+      },
+    );
+    return response;
+  } catch (e) {
+    print('Error fetching exercise details: $e');
+    rethrow;
+  }
+}
 
   // Fetch the signed-in user's activities
   static Future<List<Map<String, dynamic>>> fetchUserActivities(String userId) async {
