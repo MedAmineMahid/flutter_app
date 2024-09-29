@@ -51,10 +51,9 @@ class _ProfilePageState extends State<ProfilePage> {
               'username': data['username'],
               'age': data['age'],
               'gender': data['gender'],
-              'firstName': data['firstName'],
+              'firstName': data['name'],
               'lastName': data['lastName'],
-              'healthGoals': data['healthGoals'],
-              'goals': data['goals'],
+              'healthGoals': data['goals'],
             };
           });
         } else {
@@ -246,13 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Joined in 2020',
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
+                  
                     ],
                   ),
                 ),
